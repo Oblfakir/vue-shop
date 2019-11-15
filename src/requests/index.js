@@ -17,62 +17,58 @@ export function setSessionToken(token) {
     localStorage.setItem('session-token', token);
 }
 
-export function login(data) {
-    const body = JSON.stringify({ login: data.login, password: data.password });
+function get(url) {
+    return fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'session-token': getSessionToken()
+        },
+    })
+}
 
-    return fetch(paths.LOGIN, {
-        body,
+function post(url, body) {
+    return fetch(url, {
+        body: typeof body === 'string' ? body : JSON.stringify(body),
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'session-token': getSessionToken()
         },
-    }).then(res => {
-        const sessionToken = res.headers.get('session-token');
-
-        if (sessionToken) {
-            setSessionToken(sessionToken);
-        }
-
-        return res.status === 200;
     });
+}
+
+export function login(data) {
+    return post(paths.LOGIN, { login: data.login, password: data.password })
+        .then(res => {
+            const sessionToken = res.headers.get('session-token');
+
+            if (sessionToken) {
+                setSessionToken(sessionToken);
+            }
+
+            return res.status === 200;
+        });
 }
 
 export function getUserRole(id) {
-    return fetch(paths.ROLES, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'session-token': getSessionToken()
-        },
-    })
-    .then(body => body.json())
-    .then(roles => roles.find(x => x.id === id))
-    .then(role => role ? role.name : null);
+    return get(paths.ROLES)
+        .then(body => body.json())
+        .then(roles => roles.find(x => x.id === id))
+        .then(role => role ? role.name : null);
 }
 
 export function getUserData(login) {
-    return fetch(paths.USERS, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'session-token': getSessionToken()
-        },
-    })
-    .then(body => body.json())
-    .then(users => users.find(x => x.login === login))
-    .then(user => {
-        if (!user) return;
+    return get(paths.USERS)
+        .then(body => body.json())
+        .then(users => users.find(x => x.login === login))
+        .then(user => {
+            if (!user) return;
 
-        return getUserRole(user.id).then(name => ({...user, role: name}));
-    });
+            return getUserRole(user.id).then(name => ({...user, role: name}));
+        });
 }
 
 export function checkAuthStatus() {
-    return fetch(paths.USERS, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'session-token': getSessionToken()
-        },
-    }).then(res => res.status === 200);
+    return get(paths.USERS).then(res => res.status === 200);
 }

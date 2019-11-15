@@ -1,12 +1,6 @@
 <template>
     <div class="layout">
-        <v-app-bar app
-            color="green"
-            dense dark>
-            <v-app-bar-nav-icon></v-app-bar-nav-icon>
-            <v-toolbar-title>Online Market | Vue assessment</v-toolbar-title>
-            <v-spacer></v-spacer>
-        </v-app-bar>
+        <Header />
 
         <v-content>
             <v-container fluid>
@@ -17,8 +11,12 @@
 </template>
 
 <script>
+import Header from './Header';
 
 export default {
+    components: {
+        Header
+    }
 }
 </script>
 

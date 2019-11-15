@@ -7,15 +7,17 @@ const users = dbData.users;
 
 const sessionTokenName = 'session-token';
 
-var authorizedUsers = {};
+const authorizedUsers = {};
 
 function isValidUser(login, password) {
     var isValid = false;
+
     users.forEach(function(user) {
         if(user.login === login && user.password === password) {
             isValid = true;
         }
     });
+
     return isValid;
 }
 
@@ -25,17 +27,22 @@ function checkLoginAuth(login, sessionToken) {
     return !!token && token === sessionToken;
 }
 
-function checkTokenAuth(sessionToken){
+function findUserByToken(sessionToken) {
     for (let i in authorizedUsers){
         if(authorizedUsers.hasOwnProperty(i)) {
             var token = authorizedUsers[i];
 
             if(token === sessionToken) {
-                return true;
+                return authorizedUsers[i]
             }
         }
     }
-    return false;
+
+    return null;
+}
+
+function checkTokenAuth(sessionToken){
+    return !!findUserByToken(sessionToken);
 }
 
 function login(req, res) {
@@ -83,8 +90,21 @@ function isAuthorized(req, res, next) {
     }
 }
 
+function getUserByToken(req, res) {
+    const sessionToken = req.headers[sessionTokenName];
+    const login = findUserByToken(sessionToken);
+
+    if (login) {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(users.find(x => x.login === login)))
+    } else {
+        res.sendStatus(404);
+    }
+}
+
 module.exports = {
     login: login,
     logout: logout,
-    isAuthorized: isAuthorized
+    isAuthorized: isAuthorized,
+    getUserByToken: getUserByToken
 };

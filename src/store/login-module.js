@@ -35,6 +35,10 @@ export default {
 				})
 				.catch(() => {})
 				.finally(() => commit('setLoginProgress', false));
+		},
+		logout({ commit }) {
+			commit('setUser', null);
+			commit('setAuthenticatedStatus', false);
 		}
 	}
 };
