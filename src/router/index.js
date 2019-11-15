@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Layout from '@/components/Layout.vue';
+import { checkAuthStatus } from '@/requests';
 import store from '../store';
 
 Vue.use(VueRouter);
@@ -11,7 +12,7 @@ const routes = [
 		name: 'login',
 		component: () => import('../pages/LoginPage.vue'),
 		beforeEnter: (to, from, next) => {
-			if (store.state.isAuthenticated) {
+			if (store.state.login.isAuthenticated) {
 				router.push('/')
 			} else {
 				next();
@@ -43,7 +44,7 @@ const routes = [
 				name: 'checkout',
 				component: () => import('../pages/Checkout.vue'),
 				beforeEnter: (to, from, next) => {
-					if (store.state.isAuthenticated) {
+					if (store.state.login.isAuthenticated) {
 						router.push('/')
 					} else {
 						next();
@@ -79,6 +80,12 @@ const router = new VueRouter({
 	mode: 'history',
 	base: process.env.BASE_URL,
 	routes
+});
+
+router.beforeEach((to, from, next) => {
+	checkAuthStatus()
+		.then(success => store.commit('setAuthenticatedStatus', success))
+		.then(() => next());
 });
 
 export default router;

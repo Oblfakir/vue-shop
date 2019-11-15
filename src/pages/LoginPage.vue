@@ -67,8 +67,14 @@ export default {
     },
     computed: {
         ...mapState({
-            isProgress: state => state.login.loginInProgress
+            isProgress: state => state.login.loginInProgress,
+            isAuthenticated: state => state.login.isAuthenticated
         })
+    },
+    watch: {
+        isAuthenticated() {
+            this.$router.push('/');
+        }
     },
     methods: {
         tryPerformLogin() {

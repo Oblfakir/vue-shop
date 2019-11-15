@@ -44,16 +44,12 @@ function login(req, res) {
     const sessionToken = req.headers[sessionTokenName];
 
     if (checkLoginAuth(login, sessionToken)) {
-        setTimeout(() => {
-            res.sendStatus(200);
-        }, 500);
+        res.sendStatus(200);
         return;
     }
 
     if(!isValidUser(login, password)) {
-        setTimeout(() => {
-            res.sendStatus(400);
-        }, 500);
+        res.sendStatus(400);
         return;
     }
 
@@ -61,9 +57,7 @@ function login(req, res) {
     authorizedUsers[login] = newSessionToken;
     res.set(sessionTokenName, newSessionToken);
     res.set('access-control-expose-headers', sessionTokenName);
-    setTimeout(() => {
-        res.sendStatus(200);
-    }, 500);
+    res.sendStatus(200);
 }
 
 function logout(req, res) {

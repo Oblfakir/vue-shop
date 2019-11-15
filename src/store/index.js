@@ -8,7 +8,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		isAuthenticated: false,
 		has500Error: true
 	},
 	mutations: {
