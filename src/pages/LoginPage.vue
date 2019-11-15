@@ -15,6 +15,9 @@
                         <v-card-title>
                             Login
                         </v-card-title>
+                        <v-alert v-if="loginError" type="error">
+                            {{ loginError }}
+                        </v-alert>
                         <v-list-item>
                             <v-text-field
                                 v-model="login"
@@ -68,7 +71,8 @@ export default {
     computed: {
         ...mapState({
             isProgress: state => state.login.loginInProgress,
-            isAuthenticated: state => state.login.isAuthenticated
+            isAuthenticated: state => state.login.isAuthenticated,
+            loginError: state => state.login.loginError
         })
     },
     watch: {

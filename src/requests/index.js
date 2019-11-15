@@ -37,6 +37,36 @@ export function login(data) {
     });
 }
 
+export function getUserRole(id) {
+    return fetch(paths.ROLES, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'session-token': getSessionToken()
+        },
+    })
+    .then(body => body.json())
+    .then(roles => roles.find(x => x.id === id))
+    .then(role => role ? role.name : null);
+}
+
+export function getUserData(login) {
+    return fetch(paths.USERS, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'session-token': getSessionToken()
+        },
+    })
+    .then(body => body.json())
+    .then(users => users.find(x => x.login === login))
+    .then(user => {
+        if (!user) return;
+
+        return getUserRole(user.id).then(name => ({...user, role: name}));
+    });
+}
+
 export function checkAuthStatus() {
     return fetch(paths.USERS, {
         method: 'GET',
