@@ -1,16 +1,11 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link>|
-      <router-link to="/about">About</router-link>
-    </div>
+  <v-app>
     <router-view />
-  </div>
+  </v-app>
 </template>
 
+<script>
+</script>
+
 <style lang="scss">
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 </style>

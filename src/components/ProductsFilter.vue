@@ -1,5 +1,5 @@
 <template>
-    <div></div>
+    <div>Product filter</div>
 </template>
 
 <script>

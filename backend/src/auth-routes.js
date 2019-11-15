@@ -24,7 +24,7 @@ function checkLoginAuth(login, sessionToken) {
 }
 
 function checkTokenAuth(sessionToken){
-    for(i in authorizedUsers){
+    for (let i in authorizedUsers){
         if(authorizedUsers.hasOwnProperty(i)) {
             var token = authorizedUsers[i];
 
@@ -36,7 +36,7 @@ function checkTokenAuth(sessionToken){
     return false;
 }
 
-function login(req, res, next) {
+function login(req, res) {
     const login = req.body.login;
     const password = req.body.password;
     const sessionToken = req.headers[sessionTokenName];
@@ -56,7 +56,7 @@ function login(req, res, next) {
     res.set(sessionTokenName, newSessionToken);
     res.sendStatus(200);
 }
-function logout(req, res, next) {
+function logout(req, res) {
     const login = req.body.login;
     const sessionToken = req.headers[sessionTokenName];
 

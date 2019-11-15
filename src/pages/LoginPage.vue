@@ -1,5 +1,9 @@
 <template>
-    <div></div>
+    <v-content>
+        <v-container fluid>
+            Login
+        </v-container>
+    </v-content>
 </template>
 
 <script>

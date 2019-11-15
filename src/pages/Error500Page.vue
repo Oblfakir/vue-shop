@@ -1,5 +1,5 @@
 <template>
-    <div></div>
+    <div>Error 500</div>
 </template>
 
 <script>
