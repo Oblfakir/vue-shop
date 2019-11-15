@@ -1,6 +1,8 @@
 const uuidV1 = require('uuid/v1');
 const fs = require('fs');
-const dbData = JSON.parse(fs.readFileSync('db.json', 'utf8'));
+const path = require('path');
+const dbPath = path.join(__dirname, 'db.json');
+const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
 const users = dbData.users;
 
 const sessionTokenName = 'session-token';
@@ -42,20 +44,28 @@ function login(req, res) {
     const sessionToken = req.headers[sessionTokenName];
 
     if (checkLoginAuth(login, sessionToken)) {
-        res.sendStatus(200);
+        setTimeout(() => {
+            res.sendStatus(200);
+        }, 500);
         return;
     }
 
     if(!isValidUser(login, password)) {
-        res.sendStatus(400);
+        setTimeout(() => {
+            res.sendStatus(400);
+        }, 500);
         return;
     }
 
     const newSessionToken = uuidV1();
     authorizedUsers[login] = newSessionToken;
     res.set(sessionTokenName, newSessionToken);
-    res.sendStatus(200);
+    res.set('access-control-expose-headers', sessionTokenName);
+    setTimeout(() => {
+        res.sendStatus(200);
+    }, 500);
 }
+
 function logout(req, res) {
     const login = req.body.login;
     const sessionToken = req.headers[sessionTokenName];
@@ -68,6 +78,7 @@ function logout(req, res) {
     delete authorizedUsers[login];
     res.sendStatus(200);
 }
+
 function isAuthorized(req, res, next) {
     const sessionToken = req.headers[sessionTokenName];
 
