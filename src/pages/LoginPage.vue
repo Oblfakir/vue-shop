@@ -2,15 +2,15 @@
     <v-content>
         <v-container fluid>
             <v-row justify="center">
-                <v-col lg="1" md="1" sm="1" justify="center">
+                <v-col lg="1" md="2" sm="3" cols="4" justify="center">
                     <div class="logo">
                         <img src="../assets/logo.svg" alt="logo">
                     </div>
                 </v-col>
             </v-row>
             <v-row>
-                <v-col lg="4"></v-col>
-                <v-col lg="4">
+                <v-col lg="4" md="3" sm="1" cols="0"></v-col>
+                <v-col lg="4" md="6" sm="10" cols="12">
                     <v-card class="pa-2" tile outlined>
                         <v-card-title>
                             Login
@@ -50,7 +50,7 @@
                         </v-row>
                     </v-card>
                 </v-col>
-                <v-col lg="4"></v-col>
+                <v-col lg="4" md="3" sm="1" cols="0"></v-col>
             </v-row>
         </v-container>
     </v-content>

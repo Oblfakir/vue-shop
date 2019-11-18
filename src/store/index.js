@@ -1,8 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import login from './login-module';
-import productDetails from './product-details-module';
-import productList from './product-list-module';
+import products from './products-module';
 
 Vue.use(Vuex);
 
@@ -20,7 +19,6 @@ export default new Vuex.Store({
 	},
 	modules: {
 		login,
-		productDetails,
-		productList
+		products
 	}
 });

@@ -1,5 +1,7 @@
 <template>
-    <div>Product filter</div>
+    <v-card>
+        
+    </v-card>
 </template>
 
 <script>
