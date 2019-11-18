@@ -1,7 +1,8 @@
 <template>
     <v-card outlined>
-        <v-img :src="product.image">
-            <v-rating v-model="product.rating" small></v-rating>
+        <v-img :src="imageSrc" @error="onImgLoadError">
+            <v-rating v-model="product.rating" small
+                color="white" background-color="white"></v-rating>
         </v-img>
         <v-card-title>
             {{ product.name }}
@@ -34,6 +35,16 @@
 
 <script>
 export default {
+    data() {
+        return {
+            imageSrc: this.product.image
+        }
+    },
+    methods: {
+        onImgLoadError() {
+            this.imageSrc = 'https://via.placeholder.com/400x300';
+        }
+    },
     props: [ 'product' ]
 }
 </script>
