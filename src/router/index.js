@@ -84,7 +84,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 	checkAuthStatus()
-		.then(success => store.commit('setAuthenticatedStatus', success))
+		.then(success => {
+			store.dispatch('getUser');
+			store.commit('setAuthenticatedStatus', success);
+		})
 		.then(() => next());
 });
 

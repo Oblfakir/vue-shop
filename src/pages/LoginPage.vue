@@ -31,6 +31,7 @@
                                 v-model="password"
                                 label="Password"
                                 type="password"
+                                @keyup.enter="tryPerformLogin"
                                 required
                             ></v-text-field>
                         </v-list-item>

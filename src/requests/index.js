@@ -4,6 +4,7 @@ const paths = {
     LOGIN: `${url}/api/login`,
     LOGOUT: `${url}/api/logout`,
     USERS: `${url}/api/users`,
+    USER_INFO: `${url}/api/user`,
     ROLES: `${url}/api/roles`,
     CATEGORIES: `${url}/api/categories`,
     PRODUCTS: `${url}/api/products`,
@@ -17,6 +18,10 @@ export function setSessionToken(token) {
     localStorage.setItem('session-token', token);
 }
 
+export function removeSessionToken() {
+    localStorage.removeItem('session-token');
+}
+
 function get(url) {
     return fetch(url, {
         method: 'GET',
@@ -24,7 +29,7 @@ function get(url) {
             'Content-Type': 'application/json',
             'session-token': getSessionToken()
         },
-    })
+    }).catch(() => {});
 }
 
 function post(url, body) {
@@ -35,7 +40,7 @@ function post(url, body) {
             'Content-Type': 'application/json',
             'session-token': getSessionToken()
         },
-    });
+    }).catch(() => {});
 }
 
 export function login(data) {
@@ -51,24 +56,20 @@ export function login(data) {
         });
 }
 
-export function getUserRole(id) {
-    return get(paths.ROLES)
-        .then(body => body.json())
-        .then(roles => roles.find(x => x.id === id))
-        .then(role => role ? role.name : null);
+export function logout() {
+    return post(paths.LOGOUT).then(removeSessionToken);
 }
 
-export function getUserData(login) {
-    return get(paths.USERS)
-        .then(body => body.json())
-        .then(users => users.find(x => x.login === login))
-        .then(user => {
-            if (!user) return;
-
-            return getUserRole(user.id).then(name => ({...user, role: name}));
-        });
+export function getUserData() {
+    return get(paths.USER_INFO).then(res => res.status === 200 ? res.json() : null);
 }
 
 export function checkAuthStatus() {
-    return get(paths.USERS).then(res => res.status === 200);
+    return get(paths.USERS).then(res => {
+        if (res.status !== 200) {
+            removeSessionToken();
+        }
+
+        return res.status === 200;
+    });
 }

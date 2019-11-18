@@ -1,4 +1,4 @@
-import { login, getUserData } from '@/requests';
+import { login, logout, getUserData } from '@/requests';
 
 export default {
 	state: {
@@ -25,7 +25,7 @@ export default {
 			login(userData)
 				.then(success => {
 					if (success) {
-						getUserData(userData.login).then((user) => {
+						getUserData().then((user) => {
 							commit('setUser', user);
 							commit('setAuthenticatedStatus', success);
 						})
@@ -36,9 +36,14 @@ export default {
 				.catch(() => {})
 				.finally(() => commit('setLoginProgress', false));
 		},
+		getUser({ commit }) {
+			getUserData().then((user) => commit('setUser', user));
+		},
 		logout({ commit }) {
-			commit('setUser', null);
-			commit('setAuthenticatedStatus', false);
+			logout().then(() => {
+				commit('setUser', null);
+				commit('setAuthenticatedStatus', false);
+			});
 		}
 	}
 };
