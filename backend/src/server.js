@@ -107,8 +107,8 @@ app.get(URLS.USERS, (req, res) => res.json(users));
 app.get(URLS.ROLES, (req, res) => res.json(roles));
 app.get(URLS.CATEGORIES, (req, res) => res.json(categories));
 app.get(URLS.PRODUCTS, (req, res) => res.json(products));
-app.get(URLS.CATEGORY, (req, res) => res.json(categories.find(x => x.id === req.params.id)));
-app.get(URLS.PRODUCT, (req, res) => res.json(products.find(x => x.id === req.params.id)));
+app.get(URLS.CATEGORY, (req, res) => res.json(categories.find(x => x.id === +req.params.id)));
+app.get(URLS.PRODUCT, (req, res) => res.json(products.find(x => x.id === +req.params.id)));
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${ PORT }`);

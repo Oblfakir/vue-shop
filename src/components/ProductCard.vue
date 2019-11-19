@@ -24,7 +24,7 @@
                     <v-btn small>
                         Add to basket
                     </v-btn>
-                    <v-btn small>
+                    <v-btn small @click="navigateToDetails(product.id)">
                         Details
                     </v-btn>
                 </v-row>
@@ -43,6 +43,9 @@ export default {
     methods: {
         onImgLoadError() {
             this.imageSrc = 'https://via.placeholder.com/400x300';
+        },
+        navigateToDetails(id) {
+            this.$router.push(`/products/${id}`);
         }
     },
     props: [ 'product' ]

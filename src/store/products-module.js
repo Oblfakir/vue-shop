@@ -1,4 +1,4 @@
-import { getProducts } from '@/requests';
+import { getProducts, getProduct } from '@/requests';
 
 const noCategoryName = 'None';
 const itemsPerPage = 5;
@@ -12,9 +12,13 @@ export default {
 		availableCategories: [ noCategoryName ],
 		pagesNumber: 1,
 		selectedPage: 1,
-		lastAppliedFilter: {}
+		lastAppliedFilter: {},
+		product: null
 	},
 	mutations: {
+		setProduct(state, product) {
+			state.product = product;
+		},
 		setProducts(state, products) {
 			state.allProducts = products;
 		},
@@ -83,6 +87,17 @@ export default {
 					commit('setProducts', products);
 					commit('setCategories', products);
 					commit('filterProducts', null);
+				}
+
+				commit('setLoadingState', false);
+			});
+		},
+		loadProduct({ commit }, id) {
+			commit('setLoadingState', true);
+
+			getProduct(id).then(product => {
+				if (product) {
+					commit('setProduct', product);
 				}
 
 				commit('setLoadingState', false);
