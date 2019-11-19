@@ -1,11 +1,18 @@
 import { getProducts } from '@/requests';
 
+const noCategoryName = 'None';
+const itemsPerPage = 5;
+
 export default {
 	state: {
 		isProductsLoading: false,
 		products: [],
+		filteredProducts: [],
 		allProducts: [],
-		availableCategories: [ 'None' ]
+		availableCategories: [ noCategoryName ],
+		pagesNumber: 1,
+		selectedPage: 1,
+		lastAppliedFilter: {}
 	},
 	mutations: {
 		setProducts(state, products) {
@@ -15,12 +22,16 @@ export default {
 			state.isProductsLoading = status;
 		},
 		setCategories(state, products) {
-			state.availableCategories = [ 'None', ...new Set(products.map(x => x.category)) ];
+			state.availableCategories = [ noCategoryName, ...new Set(products.map(x => x.category)) ];
 		},
 		filterProducts(state, filter) {
-			if (!filter) {
-				state.products = state.allProducts;
-			} else {
+			if (!state.lastAppliedFilter && !filter) return;
+
+			state.lastAppliedFilter = filter;
+
+			let filteredProducts = state.allProducts;
+
+			if (filter) {
 				const {
 					availableOnly,
 					category,
@@ -29,12 +40,12 @@ export default {
 					priceTo,
 					priceFrom
 				} = filter;
-				let filteredProducts = state.allProducts.filter(x => x.gender === gender)
+				filteredProducts = filteredProducts.filter(x => x.gender === gender);
 
 				if (availableOnly) {
 					filteredProducts = filteredProducts.filter(x => x.count > 0);
 				}
-				if (category !== 'None') {
+				if (category !== noCategoryName) {
 					filteredProducts = filteredProducts.filter(x => x.category === category);
 				}
 				if (rating) {
@@ -46,10 +57,22 @@ export default {
 				if (priceFrom) {
 					filteredProducts = filteredProducts.filter(x => x.cost >= priceFrom);
 				}
-
-				state.products = filteredProducts;
 			}
-		}
+
+			const pagesNumber = Math.ceil(filteredProducts.length / itemsPerPage);
+			state.pagesNumber = pagesNumber === 0 ? 1 : pagesNumber;
+			state.filteredProducts = filteredProducts;
+			state.selectedPage = 1;
+			state.products = [...state.filteredProducts.slice(0, itemsPerPage)];
+		},
+		setSelectedPage(state, page) {
+			if (page > 0 && page <= state.pagesNumber) {
+				state.selectedPage = page;
+
+				const offset = itemsPerPage * (state.selectedPage - 1);
+				state.products = [...state.filteredProducts.slice(0 + offset, itemsPerPage + offset)];
+			}
+		},
 	},
 	actions: {
 		loadProducts({ commit }) {

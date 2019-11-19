@@ -6,6 +6,15 @@
             </v-col>
         </v-row>
         <v-row justify="center">
+            <v-col cols="1">
+                <v-pagination
+                    :value="selectedPage"
+                    @input="handlePageChange"
+                    :length="pagesNumber"
+                    ></v-pagination>
+            </v-col>
+        </v-row>
+        <v-row justify="center">
             <v-col cols="1" v-if="isProductsLoading">
                 <v-progress-circular indeterminate></v-progress-circular>
             </v-col>
@@ -14,6 +23,15 @@
             </v-col>
             <v-col cols="12">
                 <ProductsContainer :products="products"/>
+            </v-col>
+        </v-row>
+         <v-row justify="center">
+            <v-col cols="1">
+                <v-pagination
+                    :value="selectedPage"
+                    @input="handlePageChange"
+                    :length="pagesNumber"
+                    ></v-pagination>
             </v-col>
         </v-row>
     </div>
@@ -32,13 +50,20 @@ export default {
     mounted() {
         this.$store.dispatch('loadProducts');
     },
+    methods: {
+        handlePageChange(page) {
+            this.$store.commit('setSelectedPage', page);
+        }
+    },
     computed: {
         isNoMatchesVisible() {
             return !this.isProductsLoading && this.products.length === 0;
         },
         ...mapState({
             products: state => state.products.products,
-            isProductsLoading: state => state.products.isProductsLoading
+            isProductsLoading: state => state.products.isProductsLoading,
+            pagesNumber: state => state.products.pagesNumber,
+            selectedPage: state => state.products.selectedPage
         })
     }
 }
