@@ -2,7 +2,7 @@
     <v-content>
         <v-container fluid>
             <v-row justify="center">
-                <v-col lg="1" md="2" sm="3" cols="4" justify="center">
+                <v-col lg="1" md="2" sm="3" cols="4">
                     <div class="logo">
                         <img src="../assets/logo.svg" alt="logo">
                     </div>

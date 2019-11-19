@@ -4,7 +4,8 @@ export default {
 	state: {
 		isProductsLoading: false,
 		products: [],
-		allProducts: []
+		allProducts: [],
+		availableCategories: [ 'None' ]
 	},
 	mutations: {
 		setProducts(state, products) {
@@ -13,43 +14,55 @@ export default {
 		setLoadingState(state, status) {
 			state.isProductsLoading = status;
 		},
+		setCategories(state, products) {
+			state.availableCategories = [ 'None', ...new Set(products.map(x => x.category)) ];
+		},
 		filterProducts(state, filter) {
 			if (!filter) {
 				state.products = state.allProducts;
 			} else {
-				// const {
-				// 	availableOnly,
-				// 	category,
-				// 	gender,
-				// 	rating,
-				// 	priceTo,
-				// 	priceFrom
-				// } = filter;
-				state.products = state.allProducts; // TODO: apply filters
+				const {
+					availableOnly,
+					category,
+					gender,
+					rating,
+					priceTo,
+					priceFrom
+				} = filter;
+				let filteredProducts = state.allProducts.filter(x => x.gender === gender)
+
+				if (availableOnly) {
+					filteredProducts = filteredProducts.filter(x => x.count > 0);
+				}
+				if (category !== 'None') {
+					filteredProducts = filteredProducts.filter(x => x.category === category);
+				}
+				if (rating) {
+					filteredProducts = filteredProducts.filter(x => x.rating === rating);
+				}
+				if (priceTo) {
+					filteredProducts = filteredProducts.filter(x => x.cost <= priceTo);
+				}
+				if (priceFrom) {
+					filteredProducts = filteredProducts.filter(x => x.cost >= priceFrom);
+				}
+
+				state.products = filteredProducts;
 			}
 		}
-	// 	"id": 3,
-    //   "categoryId": 0,
-    //   "image": "https://images.pexels.com/photos/291762/pexels-photo-291762.jpeg?h=350&auto=compress&cs=tinysrgb",
-    //   "name": "Active wear Lorem Ipsum 4",
-    //   "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    //   "cost": 37.99,
-    //   "rating": 0,
-    //   "gender": "Woman",
-    //   "count": 5,
-    //   "soldCount": 0
 	},
 	actions: {
 		loadProducts({ commit }) {
-			commit('setLoadingState', false);
+			commit('setLoadingState', true);
 
 			getProducts().then(products => {
 				if (products) {
 					commit('setProducts', products);
+					commit('setCategories', products);
 					commit('filterProducts', null);
 				}
 
-				commit('setLoadingState', true);
+				commit('setLoadingState', false);
 			});
 		}
 	},
